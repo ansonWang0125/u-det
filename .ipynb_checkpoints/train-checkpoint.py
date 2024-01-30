@@ -106,7 +106,6 @@ def plot_training(training_history, arguments):
     for line in gridlines2:
         line.set_linestyle('-.')
 
-    print("save image at: ", join(arguments.output_dir, f"{arguments.output_name}_plots_{arguments.time}.png"))
     f.savefig(join(arguments.output_dir, f"{arguments.output_name}_plots_{arguments.time}.png"))
     plt.close()
 

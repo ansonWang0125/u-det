@@ -132,14 +132,6 @@ if __name__ == '__main__':
                         help='0 or 1')
     parser.add_argument('--compute_jaccard', type=int, default=1,
                         help='0 or 1')
-    parser.add_argument('--compute_precision', type=int, default=1,
-                        help='0 or 1')
-    parser.add_argument('--compute_recall', type=int, default=1,
-                        help='0 or 1')
-    parser.add_argument('--compute_sensitivity', type=int, default=1,
-                        help='0 or 1')
-    parser.add_argument('--compute_specificity', type=int, default=1,
-                        help='0 or 1')
     parser.add_argument('--compute_assd', type=int, default=0,
                         help='0 or 1')
     parser.add_argument('--which_gpus', type=str, default="0",

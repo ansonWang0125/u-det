@@ -99,11 +99,11 @@ def split_data(root_path, num_splits):
         train_index = test_index = mask_list
         with open(join(outdir,'train_split_' + str(0) + '.csv'), 'w', encoding='utf-8', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            print('basename=%s'%([basename(mask_list[0]).replace("masks_","")]))
-            writer.writerow([basename(mask_list[0]).replace("masks_","")])
+            print('basename=%s'%([basename(mask_list[0])]))
+            writer.writerow([basename(mask_list[0])])
         with open(join(outdir,'test_split_' + str(0) + '.csv'), 'w', encoding='utf-8', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            writer.writerow([basename(mask_list[0]).replace("masks_","")])
+            writer.writerow([basename(mask_list[0])])
     else:
         kf = KFold(n_splits=num_splits)
         n = 0
@@ -111,11 +111,11 @@ def split_data(root_path, num_splits):
             with open(join(outdir,'train_split_' + str(n) + '.csv'), 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                 for i in train_index:
-                    writer.writerow([basename(mask_list[i]).replace("masks_","")])
+                    writer.writerow([basename(mask_list[i])])
             with open(join(outdir,'test_split_' + str(n) + '.csv'), 'w', newline='') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
                 for i in test_index:
-                    writer.writerow([basename(mask_list[i]).replace("masks_","")])
+                    writer.writerow([basename(mask_list[i])])
             n += 1
 
 

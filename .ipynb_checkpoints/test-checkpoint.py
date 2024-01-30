@@ -20,7 +20,7 @@ from tqdm import tqdm
 import numpy as np
 import scipy.ndimage.morphology
 from skimage import measure, filters
-from Model_Helpers.metrics import dc, jc, assd, sensitivity, specificity, precision, recall
+from metrics import dc, jc, assd
 
 
 
@@ -99,18 +99,6 @@ def test(args, test_list, model_list, net_input_shape):
     if args.compute_jaccard:
         jacc_arr = np.zeros((len(test_list)))
         outfile += 'jacc_'
-    if args.compute_precision:
-        precision_arr = np.zeros((len(test_list)))
-        outfile += 'pre_'
-    if args.compute_recall:
-        recall_arr = np.zeros((len(test_list)))
-        outfile += 'rec_'
-    if args.compute_sensitivity:
-        sensitivity_arr = np.zeros((len(test_list)))
-        outfile += 'sens_'
-    if args.compute_specificity:
-        specificity_arr = np.zeros((len(test_list)))
-        outfile += 'spec_'
     if args.compute_assd:
         assd_arr = np.zeros((len(test_list)))
         outfile += 'assd_'
@@ -126,14 +114,6 @@ def test(args, test_list, model_list, net_input_shape):
             row.append('Dice Coefficient')
         if args.compute_jaccard:
             row.append('Jaccard Index')
-        if args.compute_precision:
-            row.append('Precision')
-        if args.compute_recall:
-            row.append('Recall')
-        if args.compute_sensitivity:
-            row.append('Sensitivity')
-        if args.compute_specificity:
-            row.append('Specificity')
         if args.compute_assd:
             row.append('Average Symmetric Surface Distance')
 
@@ -173,7 +153,7 @@ def test(args, test_list, model_list, net_input_shape):
             # Load gt mask
             gt_data = np.load(join(args.data_root_dir,'masks','masks_'+img[0])).T
             gt_data = gt_data[np.newaxis,:,:]                  
-            # sitk_mask = sitk.GetImageFromArray(gt_data)
+            sitk_mask = sitk.GetImageFromArray(gt_data)
 
             # Plot Qual Figure
             print('Creating Qualitative Figure for Quick Reference')
@@ -203,7 +183,6 @@ def test(args, test_list, model_list, net_input_shape):
             fig = plt.gcf()
             fig.suptitle(img[0][:-4])
 
-            print("save image at: ", join(fig_out_dir, img[0][:-4] + '_qual_fig' + '.png'))
             plt.savefig(join(fig_out_dir, img[0][:-4] + '_qual_fig' + '.png'),
                         format='png', bbox_inches='tight')
             plt.close('all')
@@ -219,26 +198,6 @@ def test(args, test_list, model_list, net_input_shape):
                 jacc_arr[i] = jc(output_bin, gt_data)
                 print('\tJaccard: {}'.format(jacc_arr[i]))
                 row.append(jacc_arr[i])
-            if args.compute_precision:
-                print('Computing Precision')
-                precision_arr[i] = precision(output_bin, gt_data)
-                print('\tPrecision: {}'.format(precision_arr[i]))
-                row.append(precision_arr[i])
-            if args.compute_recall:
-                print('Computing Jaccard')
-                recall_arr[i] = recall(output_bin, gt_data)
-                print('\tRecall: {}'.format(recall_arr[i]))
-                row.append(recall_arr[i])
-            if args.compute_sensitivity:
-                print('Computing Sensitivity')
-                sensitivity_arr[i] = sensitivity(output_bin, gt_data)
-                print('\tSensitivity: {}'.format(sensitivity_arr[i]))
-                row.append(sensitivity_arr[i])
-            if args.compute_specificity:
-                print('Computing Specificity')
-                specificity_arr[i] = specificity(output_bin, gt_data)
-                print('\tSpecificity: {}'.format(specificity_arr[i]))
-                row.append(specificity_arr[i])
             if args.compute_assd:
                 print('Computing ASSD')
                 assd_arr[i] = assd(output_bin, gt_data, voxelspacing=sitk_img.GetSpacing(), connectivity=1)
@@ -252,14 +211,6 @@ def test(args, test_list, model_list, net_input_shape):
             row.append(np.mean(dice_arr))
         if args.compute_jaccard:
             row.append(np.mean(jacc_arr))
-        if args.compute_precision:
-            row.append(np.mean(precision_arr))
-        if args.compute_recall:
-            row.append(np.mean(recall_arr))
-        if args.compute_sensitivity:
-            row.append(np.mean(sensitivity_arr))
-        if args.compute_specificity:
-            row.append(np.mean(specificity_arr))
         if args.compute_assd:
             row.append(np.mean(assd_arr))
         writer.writerow(row)
